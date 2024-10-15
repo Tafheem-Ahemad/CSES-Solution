@@ -27,44 +27,41 @@ const int MOD=1e9+7;
 #define fast() ios_base::sync_with_stdio(false); cin.tie(NULL);
 #define pb push_back
 
-unordered_set<ll> dp[105];
 
-unordered_set<ll> solve(int ind,vl &v){
+ll n;
 
-	int n=v.size();
-	if(ind==n-1) {
-		unordered_set<ll>st;
-		st.insert(0ll);
-		st.insert(v[n-1]);
-		return st;
-	}
+bool solve(int i,int sum,int v[],vector<vi>&dp){
 
-	unordered_set<ll>st = solve(ind+1,v);
-	unordered_set<ll>ans;
+	if(sum==0) return 1;
+	if(sum<0) return 0;
+	if(i==n) return 0;
 
-	for(auto i:st){
-		ans.insert(i);
-		ans.insert(i+v[ind]);
-	}
+	if(dp[i][sum] != -1) return dp[i][sum];
 
-	return dp[ind]=ans;
+	int ans=0;
+	ans=(ans | solve(i+1,sum,v,dp));
+	ans=(ans | solve(i+1,sum-v[i],v,dp));
+
+	return dp[i][sum]=ans;
 }
 
 
 void Ahemad(){
-	ll n;
 	cin>>n;
 
-	vl v(n);
-	input(v);
+	int v[n];
+	for(int i=0;i<n;i++) cin>>v[i];
 
-	unordered_set<ll> ans=solve(0,v);
-	ans.erase(0ll);
-	vl t(ans.begin(),ans.end());
-	sort(all(t));
+	vector<vi> dp(n+5,vi(100000+5,-1));
+	list<int>li;
+	for(int i=1;i<=100000 ;i++){
+		if(solve(0,i,v,dp)){
+			li.pb(i);
+		}
+	}
 
-	cout<<ans.size()<<endl;
-	printv(t)
+	cout<<li.size()<<endl;
+	printv(li);
 }
 
 
